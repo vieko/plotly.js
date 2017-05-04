@@ -149,7 +149,7 @@ fx.init = function(gd) {
             };
 
             maindrag.onclick = function(evt) {
-                fx.click(gd, evt);
+                fx.click(gd, evt, subplot);
             };
 
             // corner draggers
@@ -300,8 +300,8 @@ fx.hover = function(gd, evt, subplot) {
 
 // The actual implementation is here:
 
-function hover(gd, evt, subplot) {
-    if(subplot === 'pie') {
+function hover(gd, evt, subplot, noHoverEvent) {
+    if(subplot === 'pie' && !noHoverEvent) {
         gd.emit('plotly_hover', {
             event: evt.originalEvent,
             points: [evt]
@@ -635,7 +635,7 @@ function hover(gd, evt, subplot) {
     }
 
     // don't emit events if called manually
-    if(!evt.target || !hoverChanged(gd, evt, oldhoverdata)) return;
+    if(!evt.target || noHoverEvent || !hoverChanged(gd, evt, oldhoverdata)) return;
 
     if(oldhoverdata) {
         gd.emit('plotly_unhover', {
@@ -1526,8 +1526,12 @@ function hoverChanged(gd, evt, oldhoverdata) {
 }
 
 // on click
-fx.click = function(gd, evt) {
+fx.click = function(gd, evt, subplot) {
     var annotationsDone = Registry.getComponentMethod('annotations', 'onClick')(gd, gd._hoverdata);
+
+    // The true flag at the end causes it to re-run the hover computation to figure out *which*
+    // point is being clicked. Without this, clicking is somewhat unreliable.
+    fx.hover(gd, evt, subplot, true);
 
     function emitClick() { gd.emit('plotly_click', {points: gd._hoverdata, event: evt}); }
 

@@ -631,7 +631,7 @@ proto.initInteractions = function() {
     };
 
     dragger.onclick = function(evt) {
-        fx.click(gd, evt);
+        fx.click(gd, evt, _this.id);
     };
 
     dragElement.init(dragOptions);
