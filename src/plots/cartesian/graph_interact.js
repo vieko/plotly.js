@@ -1531,7 +1531,7 @@ fx.click = function(gd, evt, subplot) {
 
     // fallback to fail-safe in case the plot type's hover method doesn't pass the subplot.
     // Ternary, for example, didn't, but it was caught because tested.
-    if (subplot !== undefined) {
+    if(subplot !== undefined) {
         // The true flag at the end causes it to re-run the hover computation to figure out *which*
         // point is being clicked. Without this, clicking is somewhat unreliable.
         fx.hover(gd, evt, subplot, true);
